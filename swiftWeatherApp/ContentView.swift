@@ -8,12 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var isNight = false
+    
     var body: some View {
         ZStack{
-            LinearGradientView(topColor: .blue, bottomColor: Color("lightBlue"))
+            LinearGradientView(isNight: $isNight)
             //            LinearGradientView(topColor: .black, bottomColor: .gray)
             VStack(spacing:0){
-                MainCardView(cityName: "Mumbai, IND", imageName: "cloud.sun.fill", temperature: 32)
+                MainCardView(cityName: "Mumbai, IND",
+                             imageName: isNight ? "moon.stars.fill": "cloud.sun.fill",
+                             temperature: 32)
                 
                 
                 HStack(spacing: UIScreen.main.bounds.width * 0.08){
@@ -26,9 +31,11 @@ struct ContentView: View {
                 Spacer()
                 
                 Button{
-                    print("Button Tapped")
+                    isNight = !isNight
                 } label: {
-                    WeatherButtonView(title: "Change Day Time", backgroundColor: Color(.white), foregroundColor: Color(.blue))
+                    WeatherButtonView(title: "Change Day Time",
+                                      backgroundColor: Color(.white),
+                                      foregroundColor: Color(.blue))
                 }
                 Spacer()
             }
@@ -69,13 +76,13 @@ struct WeatherDayView: View {
 }
 
 struct LinearGradientView: View {
-    var topColor : Color
-    var bottomColor : Color
+    @Binding var isNight: Bool
     var body: some View {
-        LinearGradient(gradient: Gradient(colors: [topColor, bottomColor]),
+        LinearGradient(gradient: Gradient(colors: [isNight ? .black : .blue,
+                                                   isNight ? .gray : Color("lightBlue")]),
                        startPoint: .topLeading,
                        endPoint: .bottomTrailing)
-        .edgesIgnoringSafeArea(.all)
+        .ignoresSafeArea()
     }
 }
 
